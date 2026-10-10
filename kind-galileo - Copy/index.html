@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aura | Minimalist Melbourne Finance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="theme-light">
+  <div class="app-container">
+    
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <span class="brand-dot"></span>
+        <h1 class="brand-title">AURA <span class="brand-subtitle">/ MELBOURNE</span></h1>
+      </div>
+
+      <!-- Month Selector -->
+      <div class="month-selector-group">
+        <button id="prev-month-btn" class="icon-btn" title="Previous Month" aria-label="Previous Month">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <div class="month-display-wrap">
+          <span id="current-month-label" class="current-month-text">October 2026</span>
+          <span class="currency-badge">AUD $</span>
+        </div>
+        <button id="next-month-btn" class="icon-btn" title="Next Month" aria-label="Next Month">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+        <button id="today-btn" class="text-pill-btn">Current</button>
+      </div>
+
+      <!-- Utility Actions -->
+      <div class="header-actions">
+        <button id="storage-info-btn" class="icon-btn" title="Where is my data stored?" aria-label="Data Storage Info">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        </button>
+        <button id="calculator-toggle-btn" class="secondary-btn" title="Melbourne Spending Benchmark Settings">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+          <span>Benchmarks</span>
+        </button>
+        <button id="theme-toggle-btn" class="icon-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+          <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        
+        <div class="dropdown-wrap">
+          <button id="data-menu-btn" class="icon-btn" title="Backup & Export" aria-label="Backup options">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+          </button>
+          <div id="data-dropdown" class="dropdown-menu hidden">
+            <button id="export-csv-btn" class="dropdown-item">Export Month to CSV</button>
+            <button id="export-json-btn" class="dropdown-item">Download JSON Backup</button>
+            <label class="dropdown-item file-input-label">
+              Restore from Backup
+              <input type="file" id="import-json-file" accept=".json" style="display:none;">
+            </label>
+            <hr class="dropdown-divider">
+            <button id="clear-all-btn" class="dropdown-item text-danger">Clear All Entries</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         CENTER STAGE: HERO ADD ENTRY CONSOLE
+         Positioned front-and-center when opening the page
+         ==================================================================== -->
+    <section class="hero-entry-section">
+      <div class="hero-entry-card">
+        
+        <div class="hero-card-header">
+          <div class="hero-header-left">
+            <span class="pulse-indicator"></span>
+            <span class="hero-title">Add Entry</span>
+          </div>
+
+          <!-- Segmented Type Selector -->
+          <div class="segmented-control hero-segmented">
+            <button type="button" class="segment-btn active" id="hero-btn-expense" data-type="expense">Expense</button>
+            <button type="button" class="segment-btn" id="hero-btn-income" data-type="income">Income</button>
+          </div>
+        </div>
+
+        <form id="hero-entry-form" class="hero-form">
+          <input type="hidden" id="hero-entry-type" value="expense">
+
+          <!-- Prominent Amount Input -->
+          <div class="hero-amount-wrapper">
+            <span class="hero-currency-prefix">$</span>
+            <input type="number" id="hero-amount-input" class="hero-amount-field" placeholder="0.00" step="0.01" min="0.01" required autofocus autocomplete="off">
+            <span class="hero-currency-suffix">AUD</span>
+          </div>
+
+          <!-- Primary Inputs Row -->
+          <div class="hero-fields-row">
+            <!-- Category -->
+            <div class="form-field-unit" id="hero-category-wrapper">
+              <label for="hero-category-select" class="field-micro-label">Category</label>
+              <select id="hero-category-select" class="hero-select">
+                <!-- Dynamically populated based on Expense or Income -->
+                <optgroup label="Melbourne Targets" id="optgroup-expense-core">
+                  <option value="rent-insurance" selected>🏠 Rent + Insurance</option>
+                  <option value="groceries">🛒 Groceries</option>
+                  <option value="myself">✨ Myself (Self-Care & Fun)</option>
+                </optgroup>
+                <optgroup label="Other Living Buckets" id="optgroup-expense-other">
+                  <option value="utilities">⚡ Bills & Utilities</option>
+                  <option value="transport">🚆 Transport (Myki, Fuel)</option>
+                  <option value="other">📦 Other</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <!-- Description -->
+            <div class="form-field-unit grow-field">
+              <label for="hero-desc-input" class="field-micro-label">Description</label>
+              <input type="text" id="hero-desc-input" class="hero-input" placeholder="e.g. Coles shop, Brunswick rent, Lune flat white..." required autocomplete="off">
+            </div>
+
+            <!-- Date -->
+            <div class="form-field-unit date-field">
+              <label for="hero-date-input" class="field-micro-label">Date</label>
+              <input type="date" id="hero-date-input" class="hero-input" required>
+            </div>
+          </div>
+
+          <!-- Quick Presets Chips -->
+          <div class="hero-presets-bar" id="hero-presets-bar">
+            <span class="presets-label">Presets:</span>
+            <div class="chips-scroll" id="hero-chips-container">
+              <!-- Dynamically populated for Expense or Income -->
+            </div>
+          </div>
+
+          <!-- Bottom Actions Row -->
+          <div class="hero-action-row">
+            <label class="hero-recurring-label">
+              <input type="checkbox" id="hero-recurring-checkbox">
+              <span>Repeat monthly (auto-rolls over)</span>
+            </label>
+
+            <button type="submit" class="hero-submit-btn" id="hero-submit-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span id="hero-submit-btn-text">Record Expense</span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </section>
+
+    <!-- Overview Financial Pulse Cards -->
+    <section class="overview-grid">
+      <!-- Income -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">Monthly Income</span>
+          <span class="metric-sublabel">Net AUD</span>
+        </div>
+        <div class="metric-value-row">
+          <span id="total-income-val" class="metric-value">$0.00</span>
+        </div>
+        <div class="metric-footer">
+          <span id="income-sources-count" class="metric-footnote">0 streams recorded</span>
+        </div>
+      </div>
+
+      <!-- Outflows -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">Total Outflows</span>
+          <span class="metric-sublabel">Spend to date</span>
+        </div>
+        <div class="metric-value-row">
+          <span id="total-expense-val" class="metric-value">$0.00</span>
+        </div>
+        <div class="metric-footer">
+          <span id="expense-ratio-val" class="metric-footnote">0% of income</span>
+        </div>
+      </div>
+
+      <!-- Net Savings -->
+      <div class="metric-card highlight-card">
+        <div class="metric-header">
+          <span class="metric-label">Net Balance</span>
+          <span id="savings-rate-badge" class="status-pill status-pill-neutral">0% rate</span>
+        </div>
+        <div class="metric-value-row">
+          <span id="net-balance-val" class="metric-value">$0.00</span>
+        </div>
+        <div class="metric-footer">
+          <span id="financial-health-status" class="metric-footnote">Ready for entries</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Melbourne Living Cost Benchmark Engine Panel -->
+    <section class="benchmark-section">
+      <div class="section-card benchmark-card">
+        <div class="benchmark-card-header">
+          <div class="benchmark-title-wrap">
+            <div class="melbourne-flag-dot" title="Melbourne, Victoria Calibration"></div>
+            <div>
+              <h2 class="card-heading">Melbourne Living Benchmark Intelligence</h2>
+              <p class="card-description">
+                Calibrated for a <strong>Solo Renter</strong> in Melbourne, Victoria. Calculates ideal monthly allocations in AUD based on local rental realities, supermarket baskets, and balanced living.
+              </p>
+            </div>
+          </div>
+          <div class="benchmark-header-actions">
+            <button id="edit-benchmark-params-btn" class="text-pill-btn secondary">
+              Adjust Income & Suburb Zone
+            </button>
+          </div>
+        </div>
+
+        <!-- 3 Core Benchmarks: Rent+Insurance, Groceries, Myself -->
+        <div class="benchmark-triad-grid">
+          
+          <!-- 1. Rent + Insurance -->
+          <div class="benchmark-triad-card" id="card-rent-insurance">
+            <div class="triad-header">
+              <div class="triad-title-group">
+                <span class="triad-icon">🏠</span>
+                <span class="triad-title">Rent + Insurance</span>
+              </div>
+              <span id="badge-rent-insurance" class="benchmark-status-badge status-good">Within Target</span>
+            </div>
+            
+            <div class="triad-body">
+              <div class="triad-figures">
+                <div class="figure-block">
+                  <span class="figure-label">Actual Spent</span>
+                  <span id="actual-rent-insurance" class="figure-num">$0</span>
+                </div>
+                <div class="figure-divider">/</div>
+                <div class="figure-block">
+                  <span class="figure-label">Melbourne Ideal</span>
+                  <span id="ideal-rent-insurance" class="figure-num target-num">$0</span>
+                </div>
+              </div>
+
+              <!-- Progress bar -->
+              <div class="progress-track">
+                <div id="prog-rent-insurance" class="progress-fill" style="width: 0%"></div>
+              </div>
+
+              <div class="triad-details">
+                <div class="detail-row">
+                  <span class="detail-name">Ideal Allocation</span>
+                  <span id="pct-rent-insurance" class="detail-val">30%–35% of net</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-name">Melbourne Market Range</span>
+                  <span id="market-rent-insurance" class="detail-val">$1,850 – $2,350/mo</span>
+                </div>
+                <p id="advice-rent-insurance" class="benchmark-advice-note">
+                  Target is capped at 35% of net income to protect from VIC rental stress. Covers 1-bed/studio + contents/health insurance.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Groceries -->
+          <div class="benchmark-triad-card" id="card-groceries">
+            <div class="triad-header">
+              <div class="triad-title-group">
+                <span class="triad-icon">🛒</span>
+                <span class="triad-title">Groceries</span>
+              </div>
+              <span id="badge-groceries" class="benchmark-status-badge status-good">Within Target</span>
+            </div>
+            
+            <div class="triad-body">
+              <div class="triad-figures">
+                <div class="figure-block">
+                  <span class="figure-label">Actual Spent</span>
+                  <span id="actual-groceries" class="figure-num">$0</span>
+                </div>
+                <div class="figure-divider">/</div>
+                <div class="figure-block">
+                  <span class="figure-label">Melbourne Ideal</span>
+                  <span id="ideal-groceries" class="figure-num target-num">$0</span>
+                </div>
+              </div>
+
+              <!-- Progress bar -->
+              <div class="progress-track">
+                <div id="prog-groceries" class="progress-fill" style="width: 0%"></div>
+              </div>
+
+              <div class="triad-details">
+                <div class="detail-row">
+                  <span class="detail-name">Ideal Allocation</span>
+                  <span id="pct-groceries" class="detail-val">10%–13% of net</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-name">Weekly Melbourne Solo Basket</span>
+                  <span id="market-groceries" class="detail-val">$115 – $145/wk</span>
+                </div>
+                <p id="advice-groceries" class="benchmark-advice-note">
+                  Based on balanced Coles / Woolworths / ALDI supermarket basket for 1 adult living in Melbourne.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Myself / Discretionary -->
+          <div class="benchmark-triad-card" id="card-myself">
+            <div class="triad-header">
+              <div class="triad-title-group">
+                <span class="triad-icon">✨</span>
+                <span class="triad-title">Myself (Self-Care & Fun)</span>
+              </div>
+              <span id="badge-myself" class="benchmark-status-badge status-good">Within Target</span>
+            </div>
+            
+            <div class="triad-body">
+              <div class="triad-figures">
+                <div class="figure-block">
+                  <span class="figure-label">Actual Spent</span>
+                  <span id="actual-myself" class="figure-num">$0</span>
+                </div>
+                <div class="figure-divider">/</div>
+                <div class="figure-block">
+                  <span class="figure-label">Melbourne Ideal</span>
+                  <span id="ideal-myself" class="figure-num target-num">$0</span>
+                </div>
+              </div>
+
+              <!-- Progress bar -->
+              <div class="progress-track">
+                <div id="prog-myself" class="progress-fill" style="width: 0%"></div>
+              </div>
+
+              <div class="triad-details">
+                <div class="detail-row">
+                  <span class="detail-name">Ideal Allocation</span>
+                  <span id="pct-myself" class="detail-val">15%–20% of net</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-name">Monthly Lifestyle Cushion</span>
+                  <span id="market-myself" class="detail-val">$700 – $1,050/mo</span>
+                </div>
+                <p id="advice-myself" class="benchmark-advice-note">
+                  Covers dining out, Melbourne café culture ($5.50 flat whites), gym/hobbies, entertainment, and personal shopping.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Workspace: Categories Breakdown + Itemized Ledger -->
+    <main class="content-layout">
+      
+      <!-- Category Breakdown Column -->
+      <section class="content-column left-column">
+        <div class="section-card">
+          <div class="section-header-row">
+            <div>
+              <h2 class="card-heading">Category Totals</h2>
+              <p class="card-description">Expenditure structured by life buckets.</p>
+            </div>
+          </div>
+
+          <div id="category-cards-container" class="category-cards-list">
+            <!-- Dynamic Category Cards rendered by UI -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Ledger / Transaction Log Column -->
+      <section class="content-column right-column">
+        <div class="section-card">
+          <div class="section-header-row">
+            <div>
+              <h2 class="card-heading">Monthly Ledger</h2>
+              <p class="card-description">Itemized entries for this billing cycle.</p>
+            </div>
+            <div class="ledger-filter-wrap">
+              <select id="ledger-category-filter" class="form-select minimalist-select">
+                <option value="ALL">All Entries</option>
+                <optgroup label="Income Streams">
+                  <option value="INCOME">All Income</option>
+                  <option value="income-salary">💼 Base Salary / Wages</option>
+                  <option value="income-sidehustle">🚀 Side Hustle / Freelance</option>
+                  <option value="income-investments">📈 Investments & HISA</option>
+                  <option value="income-other">💰 Other Income</option>
+                </optgroup>
+                <optgroup label="Expenses">
+                  <option value="EXPENSES">All Expenses</option>
+                  <option value="rent-insurance">🏠 Rent + Insurance</option>
+                  <option value="groceries">🛒 Groceries</option>
+                  <option value="myself">✨ Myself (Self-Care)</option>
+                  <option value="utilities">⚡ Bills & Utilities</option>
+                  <option value="transport">🚆 Transport</option>
+                  <option value="other">📦 Other Expenses</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+
+          <!-- Transaction Table -->
+          <div class="ledger-table-wrap">
+            <table class="ledger-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th class="text-right">Amount (AUD)</th>
+                  <th class="text-right actions-th"></th>
+                </tr>
+              </thead>
+              <tbody id="ledger-table-body">
+                <!-- Dynamic rows -->
+              </tbody>
+            </table>
+            <div id="ledger-empty-state" class="empty-state">
+              <div class="empty-state-icon">✦</div>
+              <p class="empty-state-title">No entries for this month yet</p>
+              <p class="empty-state-subtitle">Use the Add Entry box in the center of the screen to log your first income or expense.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-left">
+        <span>Aura Finance • Melbourne, VIC Calibration (AUD)</span>
+        <span class="footer-separator">•</span>
+        <span id="data-status-text">100% Private local storage on this computer</span>
+      </div>
+      <div class="footer-right">
+        <span>Press <kbd>/</kbd> to jump to amount</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- MODAL: Melbourne Benchmark Adjuster -->
+  <div id="benchmark-modal" class="modal-backdrop hidden" aria-hidden="true" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Melbourne Living Benchmark Settings</h3>
+        <button id="close-benchmark-modal-btn" class="icon-btn close-btn" aria-label="Close dialog">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      
+      <form id="benchmark-form" class="modal-body">
+        <p class="modal-helper-text">
+          Customize your profile to calibrate ideal monthly spending targets for Melbourne, Australia.
+        </p>
+
+        <!-- Net Monthly Income -->
+        <div class="form-group">
+          <label for="bench-income-input" class="form-label">Estimated Monthly Net Income (AUD $)</label>
+          <div class="input-prefix-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="bench-income-input" class="form-input with-prefix" placeholder="e.g. 5200" step="50" min="500" required>
+          </div>
+          <small class="form-hint">Take-home pay after Australian income tax and Medicare levy.</small>
+        </div>
+
+        <!-- Melbourne Housing Zone -->
+        <div class="form-group">
+          <label for="bench-zone-select" class="form-label">Melbourne Living Zone (Solo 1-Bed / Studio)</label>
+          <select id="bench-zone-select" class="form-select">
+            <option value="inner">Inner Suburbs / CBD (CBD, Southbank, Carlton, Richmond, South Yarra)</option>
+            <option value="middle" selected>Middle Suburbs (Brunswick, Coburg, Footscray, Preston, Hawthorn)</option>
+            <option value="outer">Outer Suburbs (Werribee, Ringwood, Dandenong, Craigieburn)</option>
+          </select>
+        </div>
+
+        <!-- Groceries Lifestyle -->
+        <div class="form-group">
+          <label for="bench-grocery-style" class="form-label">Grocery Basket Profile</label>
+          <select id="bench-grocery-style" class="form-select">
+            <option value="budget">Value-focused (ALDI + Market stalls ~ $100/wk)</option>
+            <option value="balanced" selected>Standard Balanced (Coles / Woolies ~ $135/wk)</option>
+            <option value="premium">Organic / Gourmet (Specialty grocers ~ $175/wk)</option>
+          </select>
+        </div>
+
+        <!-- Rent & Insurance Cap -->
+        <div class="form-group">
+          <label for="bench-rent-cap" class="form-label">Rent + Insurance Rule of Thumb</label>
+          <select id="bench-rent-cap" class="form-select">
+            <option value="30">Conservative (Max 30% of net pay)</option>
+            <option value="33" selected>Standard Melbourne Urban (Max 33% of net pay)</option>
+            <option value="38">Flexible Upper Bound (Max 38% before rental stress)</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="cancel-benchmark-btn" class="secondary-btn">Cancel</button>
+          <button type="submit" class="primary-btn">Update Benchmarks</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Data Storage & Privacy Info -->
+  <div id="storage-modal" class="modal-backdrop hidden" aria-hidden="true" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Where is your data stored?</h3>
+        <button id="close-storage-modal-btn" class="icon-btn close-btn" aria-label="Close dialog">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-helper-text">
+          <strong>100% Client-Side Local Storage</strong>: All your transactions, settings, and monthly records are stored directly inside your computer browser's private sandbox storage (<code>window.localStorage</code> under the key <code>aura_finance_data_v2</code>).
+        </p>
+        <div class="storage-info-bullets">
+          <div class="bullet-item">
+            <span class="bullet-dot">🔒</span>
+            <div>
+              <strong>Complete Privacy:</strong> Zero cloud servers, zero analytics, zero external network requests. Your financial figures never leave this computer.
+            </div>
+          </div>
+          <div class="bullet-item">
+            <span class="bullet-dot">💾</span>
+            <div>
+              <strong>Browser Profile Location:</strong> Stored on your Windows disk inside your browser user directory (e.g. <code>AppData\Local\Microsoft\Edge\User Data</code> or <code>Google\Chrome\User Data</code>).
+            </div>
+          </div>
+          <div class="bullet-item">
+            <span class="bullet-dot">📤</span>
+            <div>
+              <strong>Full Data Portability:</strong> Use the top right menu (<strong>⋮</strong>) anytime to export a spreadsheet-ready <strong>CSV</strong> or download a complete <strong>JSON backup</strong> to your desktop.
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="close-storage-btn" class="primary-btn">Got it</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/melbourne-calculator.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
